@@ -1,7 +1,9 @@
+import { deleteSnippet } from "@/actions";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import React from "react";
+
 
 type SnippetDetailsProp = {
     params: Promise<{ id: string }>
@@ -20,6 +22,9 @@ const snippetDetailPage: React.FC<SnippetDetailsProp> = async ({ params }) => {
 
     if (!snippet) return <h1>Snippet not found.</h1>
 
+
+    const deleteSnippetAction = deleteSnippet.bind(null, id)
+
     return (
         <div className="flex flex-col gap-5">
             <div className="flex items-center justify-between">
@@ -27,7 +32,13 @@ const snippetDetailPage: React.FC<SnippetDetailsProp> = async ({ params }) => {
                 }</h1>
                 <div className="flex items-center gap-2">
                     <Link href={`/snippet/${snippet.id}/edit`}><Button>Edit</Button></Link>
-                    <Button variant={"destructive"}>Delete</Button>
+
+                    <form action={deleteSnippetAction}>
+                        <Button variant={"destructive"} type="submit">Delete</Button>
+
+                    </form>
+
+
                 </div>
             </div>
             <pre className="p-3 bg-gray-200 border-gray-200 rounded">
