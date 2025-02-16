@@ -4,14 +4,21 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import React from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-type SnippetDetailsProp = {
-    params: Promise<{ id: string }>;
-};
 
-const snippetDetailPage: React.FC<SnippetDetailsProp> = async ({ params }) => {
-    const id = parseInt((await params).id);
+
+const SnippetDetailPage = async ({ params }: { params: { id: string } }) => {
+
+    const id = Number(params.id); // Ensure safe conversion
+
+    if (isNaN(id)) {
+        return (
+            <h1 className="text-center text-xl font-semibold text-red-500">
+                🚨 Invalid snippet ID!
+            </h1>
+        );
+    }
 
     const snippet = await prisma.snippet.findUnique({
         where: { id },
@@ -64,4 +71,4 @@ const snippetDetailPage: React.FC<SnippetDetailsProp> = async ({ params }) => {
     );
 };
 
-export default snippetDetailPage;
+export default SnippetDetailPage;

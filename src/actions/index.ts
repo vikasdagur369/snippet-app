@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export const saveSnippet = async (id: number, code: string) => {
@@ -42,9 +43,14 @@ export async function createSnippet(
       data: { title, code },
     });
 
+    revalidatePath("/");
     // throw new Error("Something went wrong !");
-  } catch (error: any) {
-    return { message: error.message };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return { message: error.message };
+    } else {
+      return { message: "some internal server issue!" };
+    }
   }
   redirect("/");
 }

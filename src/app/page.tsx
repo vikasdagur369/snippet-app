@@ -2,13 +2,19 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
+
+export const dynamic = "force-dynamic" // forcefully stops the caching
+
+
 export default async function Home() {
+
+
   const snippets = await prisma.snippet.findMany();
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 to-gray-700 text-white p-6">
       <div className="max-w-4xl mx-auto">
-        
+
         <h1 className="text-5xl font-extrabold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
           Code Snippet Manager
         </h1>
